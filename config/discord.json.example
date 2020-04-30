@@ -1,0 +1,14 @@
+{
+  "development": {
+    "token": "",
+    "prefix": "truck-kun"
+  },
+  "test": {
+    "token": "",
+    "prefix": "truck-kun"
+  },
+  "production": {
+    "token": "",
+    "prefix": "truck-kun"
+  }
+}
