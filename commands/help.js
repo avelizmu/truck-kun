@@ -11,8 +11,6 @@ module.exports = {
         `► ${config.prefix} help - Prints the list of commands with a short description.\n` +
         `► ${config.prefix} help {command} - Prints the help for a specific command`,
     execute: async function (client, message, arguments) {
-        // truck-kun help
-        // truck-kun help <command>
         if (arguments.length > 1) {
             return message.reply('Invalid arguments.');
         }
