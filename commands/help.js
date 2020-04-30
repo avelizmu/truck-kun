@@ -7,8 +7,8 @@ module.exports = {
         'h'
     ],
     shortDescription: 'Provide help with the commands',
-    description: 'Provide help with the commands.\n' +
-        `► ${config.prefix} help - Prints the list of commands with a short description.\n` +
+    description: 'Provide help with the commands.\n\n' +
+        `► ${config.prefix} help - Prints the list of commands with a short description.\n\n` +
         `► ${config.prefix} help {command} - Prints the help for a specific command`,
     execute: async function (client, message, arguments) {
         if (arguments.length > 1) {
