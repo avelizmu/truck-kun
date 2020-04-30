@@ -27,6 +27,22 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             type: DataTypes.DATE(3)
         }
-    }, {});
+    }, {
+        defaultScope: {
+            attributes: {
+                exclude: ['guild_id']
+            },
+            include: {
+                all: true
+            }
+        }
+    });
+    Feed.associate = function (models) {
+        Feed.hasOne(models.Guild, {
+            sourceKey: 'guild_id',
+            foreignKey: 'id',
+            as: 'guild'
+        })
+    };
     return Feed;
 };
