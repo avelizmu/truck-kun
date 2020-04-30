@@ -2,14 +2,15 @@ const {Guild, Feed} = require('../models');
 const config = require('../config').discord;
 
 module.exports = {
-    name: 'subscribe',
+    name: 'createFeed',
     aliases: [
-        's',
-        'sub'
+        'create-feed',
+        'create_feed',
+        'cf'
     ],
     shortDescription: 'Create a feed.',
     description: 'Create a feed.\n\n' +
-        `► ${config.prefix} subscribe - Create your subscription feed to start getting updates.`,
+        `► ${config.prefix} createFeed - Create your subscription feed to start getting updates.`,
     execute: async function (client, message, arguments) {
         if (arguments.length !== 0) {
             return message.reply('Invalid arguments.');
