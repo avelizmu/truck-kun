@@ -2,7 +2,7 @@ const {Guild, Feed} = require('../models');
 const config = require('../config').discord;
 
 module.exports = {
-    name: 'createFeed',
+    name: 'createfeed',
     aliases: [
         'create-feed',
         'create_feed',
