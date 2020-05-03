@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    const Guild = sequelize.define('GuildSettings', {
+    const GuildSettings = sequelize.define('GuildSettings', {
         id: {
             allowNull: false,
             autoIncrement: true,
@@ -24,5 +24,5 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE
         }
     }, {});
-    return Guild;
+    return GuildSettings;
 };
