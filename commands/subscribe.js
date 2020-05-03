@@ -50,7 +50,8 @@ module.exports = {
             if (existingSubscription) {
                 const existingMapping = await FeedToSubscriptionMapping.findOne({
                     where: {
-                        subscriptionId: existingSubscription.id
+                        subscriptionId: existingSubscription.id,
+                        feedId: existingFeed.id
                     }
                 });
                 if (existingMapping) {
@@ -122,7 +123,8 @@ module.exports = {
             if (existingSubscription) {
                 const existingMapping = await FeedToSubscriptionMapping.findOne({
                     where: {
-                        subscriptionId: existingSubscription.id
+                        subscriptionId: existingSubscription.id,
+                        feedId: existingFeed.id
                     }
                 });
                 if (existingMapping) {
