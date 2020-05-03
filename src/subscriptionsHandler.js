@@ -19,6 +19,7 @@ const doCheck = async () => {
     const subscriptions = await Subscription.findAll({});
 
     for (let subscription of subscriptions) {
+        // Mangadex Subscriptions
         if (subscription.mangadex) {
             try {
                 const {data: content} = await axios.get(subscription.url);
@@ -97,90 +98,152 @@ const doCheck = async () => {
             }
             continue;
         }
+        try {
+            // RSS Subscriptions
+            if (subscription.rss) {
+                const {data: content} = await axios.get(subscription.url);
 
-        if (subscription.rss) {
-            // TODO implement rss subscription
-            continue;
-        }
+                const {rss} = await xml2js.parseStringPromise(content);
+                const items = rss.channel[0].item;
 
-        const {data: content} = await axios.get(subscription.url);
-        const {window} = new JSDOM(content, {
-            url: subscription.url
-        });
-        const chaptersDom = window.document.querySelectorAll(subscription.chapterList);
-        const chapters = [...chaptersDom.values()].map(chapter => {
-            const chapterData = {};
-            try {
-                chapterData.chapter = chapter.querySelector(subscription.chapterNumber).innerHTML.replace(/[^\d.]/g, '');
-                chapterData.url = chapter.querySelector(subscription.chapterLink).href;
-            } catch (err) {
-                return {};
-            }
-            return chapterData;
-        }).filter(x => !!x && Object.keys(x).length);
-        const image = window.document.querySelector(subscription.image);
+                const newChapters = [];
+                for (let item of items) {
+                    const chapterNumber = item.title[0].replace(/[^\d.]/g, ' ').split(/\s/g).filter(x => x !== '').reverse()[0];
+                    const identifier = item.title[0];
+                    const url = item.link[0];
 
-        const newChapters = [];
-        for (let scrapedChapter of chapters) {
-            const [chapter, created] = await Chapter.findOrCreate({
-                where: {
-                    subscriptionId: subscription.id,
-                    identifier: subscription.name,
-                    chapter: scrapedChapter.chapter,
-                },
-                defaults: {
-                    subscriptionId: subscription.id,
-                    identifier: subscription.name,
-                    chapter: scrapedChapter.chapter,
-                    url: scrapedChapter.url
+                    const [chapter, created] = await Chapter.findOrCreate({
+                        where: {
+                            subscriptionId: subscription.id,
+                            identifier,
+                            chapter: chapterNumber
+                        },
+                        defaults: {
+                            subscriptionId: subscription.id,
+                            identifier,
+                            chapter: chapterNumber,
+                            url
+                        }
+                    });
+                    if (created) {
+                        rssValuesLoop:
+                            for (let value of Object.values(item)) {
+                                for (let inner of value) {
+                                    if (inner.img) {
+                                        chapter.image = inner.img[0]['$'].src;
+                                        break rssValuesLoop;
+                                    }
+                                    if (/\.(jpg|jpeg|png)$/.test(inner)) {
+                                        chapter.image = inner.substring(inner.indexOf('http'));
+                                        break rssValuesLoop;
+                                    }
+                                }
+                            }
+                        newChapters.push(chapter);
+                    }
                 }
+
+                for (let chapter of newChapters) {
+                    const embed = new MessageEmbed()
+                        .setTitle(chapter.identifier)
+                        .setImage(chapter.image)
+                        .setURL(chapter.url);
+
+                    const mappings = await FeedToSubscriptionMapping.scope('withFeed').findAll({
+                        where: {
+                            subscriptionId: subscription.id
+                        },
+                    });
+                    for (let mapping of mappings) {
+                        const channel = await client.channels.fetch(mapping.feed.channelId);
+                        channel.send(embed);
+                    }
+                }
+            }
+
+            // Other Subscriptions
+            const {data: content} = await axios.get(subscription.url);
+            const {window} = new JSDOM(content, {
+                url: subscription.url
             });
-            if (created) {
-                newChapters.push(chapter);
-            }
-        }
-
-        if (newChapters.length) {
-            const embed = new MessageEmbed()
-                .setTitle(subscription.name);
-
-            if (newChapters.length > 1) {
-                embed.setURL(newChapters[newChapters.length - 1].url);
-                embed.addField(`Chapter`, newChapters[newChapters.length - 1].chapter, false);
-                embed.addField('New Chapters', newChapters.length, false);
-                embed.addField('Newest Chapter', newChapters[0].chapter, false);
-            } else {
-                embed.setURL(newChapters[newChapters.length - 1].url);
-                embed.addField(`Chapter`, newChapters[newChapters.length - 1].chapter, false);
-            }
-
-            if (image.tagName === 'A') {
-                const style = image.style;
-                let styleString;
-                if (style['background-image']) {
-                    styleString = style['background-image'];
-                } else if (style['background']) {
-                    styleString = style['background-image'];
+            const chaptersDom = window.document.querySelectorAll(subscription.chapterList);
+            const chapters = [...chaptersDom.values()].map(chapter => {
+                const chapterData = {};
+                try {
+                    chapterData.chapter = chapter.querySelector(subscription.chapterNumber).innerHTML.replace(/[^\d.]/g, '');
+                    chapterData.url = chapter.querySelector(subscription.chapterLink).href;
+                } catch (err) {
+                    return {};
                 }
-                let imageUrl = styleString.replace(/^url\("?/, '').replace(/"?\)$/, '');
-                if (imageUrl.startsWith('/')) {
-                    imageUrl = `https://${window.location.host}${imageUrl}`;
+                return chapterData;
+            }).filter(x => !!x && Object.keys(x).length);
+            const image = window.document.querySelector(subscription.image);
+
+            const newChapters = [];
+            for (let scrapedChapter of chapters) {
+                const [chapter, created] = await Chapter.findOrCreate({
+                    where: {
+                        subscriptionId: subscription.id,
+                        identifier: subscription.name,
+                        chapter: scrapedChapter.chapter,
+                    },
+                    defaults: {
+                        subscriptionId: subscription.id,
+                        identifier: subscription.name,
+                        chapter: scrapedChapter.chapter,
+                        url: scrapedChapter.url
+                    }
+                });
+                if (created) {
+                    newChapters.push(chapter);
                 }
-                embed.setImage(imageUrl);
-            } else if (image.tagName === 'IMG') {
-                embed.setImage(image.src);
             }
 
-            const mappings = await FeedToSubscriptionMapping.scope('withFeed').findAll({
-                where: {
-                    subscriptionId: subscription.id
-                },
-            });
+            if (newChapters.length) {
+                const embed = new MessageEmbed()
+                    .setTitle(subscription.name);
 
-            for (let mapping of mappings) {
-                const channel = await client.channels.fetch(mapping.feed.channelId);
-                channel.send(embed);
+                if (newChapters.length > 1) {
+                    embed.setURL(newChapters[newChapters.length - 1].url);
+                    embed.addField(`Chapter`, newChapters[newChapters.length - 1].chapter, false);
+                    embed.addField('New Chapters', newChapters.length, false);
+                    embed.addField('Newest Chapter', newChapters[0].chapter, false);
+                } else {
+                    embed.setURL(newChapters[newChapters.length - 1].url);
+                    embed.addField(`Chapter`, newChapters[newChapters.length - 1].chapter, false);
+                }
+
+                if (image.tagName === 'A') {
+                    const style = image.style;
+                    let styleString;
+                    if (style['background-image']) {
+                        styleString = style['background-image'];
+                    } else if (style['background']) {
+                        styleString = style['background-image'];
+                    }
+                    let imageUrl = styleString.replace(/^url\("?/, '').replace(/"?\)$/, '');
+                    if (imageUrl.startsWith('/')) {
+                        imageUrl = `https://${window.location.host}${imageUrl}`;
+                    }
+                    embed.setImage(imageUrl);
+                } else if (image.tagName === 'IMG') {
+                    embed.setImage(image.src);
+                }
+
+                const mappings = await FeedToSubscriptionMapping.scope('withFeed').findAll({
+                    where: {
+                        subscriptionId: subscription.id
+                    },
+                });
+
+                for (let mapping of mappings) {
+                    const channel = await client.channels.fetch(mapping.feed.channelId);
+                    channel.send(embed);
+                }
             }
+        } catch (err) {
+            // Handle unexpected errors (such as cloudflare access denied) without crashing
+            console.error(`Error while handling ${subscription.url}`);
         }
     }
 }
