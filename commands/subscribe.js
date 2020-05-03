@@ -41,9 +41,13 @@ module.exports = {
 
         // subscribe {url}
         if (arguments.length === 1) {
+            let url = arguments[0];
+            if (url.endsWith('/')) {
+                url = url.substring(0, url.length - 1);
+            }
             const existingSubscription = await Subscription.findOne({
                 where: {
-                    url: arguments[0]
+                    url
                 }
             });
 
@@ -89,7 +93,7 @@ module.exports = {
                 mangadex: arguments[0].startsWith('https://mangadex.org/'),
                 rss: !arguments[0].startsWith('https://mangadex.org/'),
                 name: rssFeed.rss.channel[0].title[0],
-                url: arguments[0]
+                url
             });
             await FeedToSubscriptionMapping.create({
                 subscriptionId: subscription.id,
@@ -114,6 +118,9 @@ module.exports = {
                     .required()
             });
             const {value: subscriptionDetails} = await schema.validate(JSON.parse(arguments[arguments.length - 1]));
+            if (subscriptionDetails.url.endsWith('/')) {
+                subscriptionDetails.url = subscriptionDetails.url.substring(0, subscriptionDetails.url.length - 1);
+            }
 
             const existingSubscription = await Subscription.findOne({
                 where: {
