@@ -2,6 +2,7 @@ const {Client, Collection} = require('discord.js');
 const client = new Client();
 const config = require('../config').discord
 const fs = require('fs');
+const subscriptionsHandler = require('./subscriptionsHandler');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -14,6 +15,8 @@ client.on('ready', () => {
             client.commands.set(alias, command);
         });
     });
+
+    subscriptionsHandler.init(client);
 });
 
 client.on('message', async message => {
