@@ -14,7 +14,7 @@ module.exports = {
     description: 'Add a subscription to your feed.\n\n' +
         `► ${config.prefix} subscribe {url} - Create an RSS subscription to start listening to in your feed.` +
         `► ${config.prefix} subscribe {series_name} {subscription_details} - Create a non-rss subscription to start listening to in your ` +
-        'feed. In order to get the {subscription_details} run the code found in https://pastebin.com/EjGR6M59 in your browser console while on the subscription\'s page',
+        'feed. In order to get the {subscription_details} run the code found in https://pastebin.com/0cikTuVS in your browser console while on the subscription\'s page',
     execute: async function (client, message, arguments) {
         if (arguments.length < 1) {
             return message.reply('Invalid arguments.');
