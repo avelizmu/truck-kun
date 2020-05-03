@@ -1,4 +1,4 @@
-const {Guild, Feed, Subscription} = require('../models');
+const {Guild, Feed, Subscription, FeedToSubscriptionMapping} = require('../models');
 const config = require('../config').discord;
 const Joi = require('@hapi/joi');
 const axios = require('axios');
@@ -16,7 +16,7 @@ module.exports = {
         `► ${config.prefix} subscribe {series_name} {subscription_details} - Create a non-rss subscription to start listening to in your ` +
         'feed. In order to get the {subscription_details} run the code found in https://pastebin.com/Jkg3gzdT in your browser console while on the subscription\'s page',
     execute: async function (client, message, arguments) {
-        if (arguments.length < 2) {
+        if (arguments.length < 1) {
             return message.reply('Invalid arguments.');
         }
 
@@ -47,37 +47,51 @@ module.exports = {
             });
 
             if (existingSubscription) {
-                // TODO Once the subscription to feed mapping table is created, add a mapping and inform the user
-                return message.reply('Subscription already exists.');
-            }
+                const existingMapping = await FeedToSubscriptionMapping.findOne({
+                    where: {
+                        subscriptionId: existingSubscription.id
+                    }
+                });
+                if (existingMapping) {
+                    return message.reply('You are already subscribed to this.');
+                }
 
+                await FeedToSubscriptionMapping.create({
+                    subscriptionId: existingSubscription.id,
+                    feedId: existingFeed.id
+                });
+                return message.reply('Added subscription.')
+            }
 
             let result;
             try {
-                result = (await axios.get(arguments[arguments.length])).data;
+                result = (await axios.get(arguments[0])).data;
             } catch (err) {
                 if (err.response) {
                     return message.reply(`An error occurred while subscribing. The provided url responded with a ${err.response.status} error`);
                 }
+                console.error(err);
                 return message.reply('An error occurred while subscribing. Something happened while requesting the provided URL.');
             }
-            let feed;
+            let rssFeed;
             try {
-                feed = await xml2js.parseStringPromise(result);
-                if (!feed.rss || !feed.rss.channel) {
+                rssFeed = await xml2js.parseStringPromise(result);
+                if (!rssFeed.rss || !rssFeed.rss.channel) {
                     return message.reply('Invalid RSS feed.');
                 }
             } catch (err) {
                 return message.reply('Invalid RSS feed.');
             }
 
-            await Subscription.create({
+            const subscription = await Subscription.create({
                 mangadex: arguments[0].startsWith('https://mangadex.org/'),
-                name: feed.rss.channel[0].title[0],
+                name: rssFeed.rss.channel[0].title[0],
                 url: arguments[0]
             });
-
-            // TODO Map subscription to feed when mapping table is created
+            await FeedToSubscriptionMapping.create({
+                subscriptionId: subscription.id,
+                feedId: existingFeed.id
+            });
 
             return message.reply('Added subscription.');
         }
@@ -104,13 +118,29 @@ module.exports = {
                 }
             });
             if (existingSubscription) {
-                // TODO Once the subscription to feed mapping table is created, add a mapping and inform the user
-                return message.reply('Subscription already exists.');
+                const existingMapping = await FeedToSubscriptionMapping.findOne({
+                    where: {
+                        subscriptionId: existingSubscription.id
+                    }
+                });
+                if (existingMapping) {
+                    return message.reply('You are already subscribed to this.');
+                }
+
+                await FeedToSubscriptionMapping.create({
+                    subscriptionId: existingSubscription.id,
+                    feedId: existingFeed.id
+                });
+                return message.reply('Added subscription.')
             }
 
-            await Subscription.create({
+            const subscription = await Subscription.create({
                 ...subscriptionDetails,
                 name: arguments.splice(0, arguments.length - 1).join(' ')
+            });
+            await FeedToSubscriptionMapping.create({
+                subscriptionId: subscription.id,
+                feedId: existingFeed.id
             });
 
             await message.delete();
