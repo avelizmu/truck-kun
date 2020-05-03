@@ -227,7 +227,11 @@ const doCheck = async () => {
                     }
                     embed.setImage(imageUrl);
                 } else if (image.tagName === 'IMG') {
-                    embed.setImage(image.src);
+                    if (image.getAttribute('data-src')) {
+                        embed.setImage(image.getAttribute('data-src'));
+                    } else {
+                        embed.setImage(image.src);
+                    }
                 }
 
                 const mappings = await FeedToSubscriptionMapping.scope('withFeed').findAll({
