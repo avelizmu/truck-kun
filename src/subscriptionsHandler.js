@@ -3,14 +3,16 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const {MessageEmbed} = require('discord.js');
 const {JSDOM} = require('jsdom');
+const {CronJob} = require('cron');
 
 let client;
 
 module.exports.init = (discordClient) => {
     client = discordClient;
 
-    // TODO implement check scheduling
-    doCheck();
+    new CronJob({
+        cronTime: '*/30 * * * *', runOnInit: true, startNow: true, onTick: doCheck
+    });
 }
 
 const doCheck = async () => {
@@ -18,8 +20,6 @@ const doCheck = async () => {
 
     for (let subscription of subscriptions) {
         if (subscription.mangadex) {
-            // TODO remove
-            continue;
             try {
                 const {data: content} = await axios.get(subscription.url);
 
