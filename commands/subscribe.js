@@ -31,7 +31,8 @@ module.exports = {
 
         const existingFeed = await Feed.findOne({
             where: {
-                userId: message.author.id
+                userId: message.author.id,
+                guildSettingsId: guildSettings.id
             }
         });
         if (!existingFeed) {
