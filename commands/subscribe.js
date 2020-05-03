@@ -85,6 +85,7 @@ module.exports = {
 
             const subscription = await Subscription.create({
                 mangadex: arguments[0].startsWith('https://mangadex.org/'),
+                rss: !arguments[0].startsWith('https://mangadex.org/'),
                 name: rssFeed.rss.channel[0].title[0],
                 url: arguments[0]
             });
