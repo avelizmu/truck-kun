@@ -7,15 +7,15 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             type: DataTypes.INTEGER.UNSIGNED
         },
-        guild_id: {
+        guildSettingsId: {
             allowNull: false,
             type: DataTypes.BIGINT.UNSIGNED
         },
-        channel_id: {
+        channelId: {
             allowNull: false,
             type: DataTypes.BIGINT.UNSIGNED
         },
-        user_id: {
+        userId: {
             allowNull: false,
             type: DataTypes.BIGINT.UNSIGNED
         },
@@ -38,10 +38,10 @@ module.exports = (sequelize, DataTypes) => {
         }
     });
     Feed.associate = function (models) {
-        Feed.hasOne(models.Guild, {
-            sourceKey: 'guild_id',
+        Feed.hasOne(models.GuildSettings, {
+            sourceKey: 'guildSettingsId',
             foreignKey: 'id',
-            as: 'guild'
+            as: 'guildSettings'
         })
     };
     return Feed;

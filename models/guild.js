@@ -1,17 +1,17 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-    const Guild = sequelize.define('Guild', {
+    const Guild = sequelize.define('GuildSettings', {
         id: {
             allowNull: false,
             autoIncrement: true,
             primaryKey: true,
             type: DataTypes.INTEGER.UNSIGNED
         },
-        guild_id: {
+        guildId: {
             allowNull: false,
             type: DataTypes.BIGINT.UNSIGNED
         },
-        category_channel_id: {
+        categoryChannelId: {
             allowNull: false,
             type: DataTypes.BIGINT.UNSIGNED
         },

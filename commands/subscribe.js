@@ -1,4 +1,4 @@
-const {Guild, Feed, Subscription, FeedToSubscriptionMapping} = require('../models');
+const {GuildSettings, Feed, Subscription, FeedToSubscriptionMapping} = require('../models');
 const config = require('../config').discord;
 const Joi = require('@hapi/joi');
 const axios = require('axios');
@@ -20,18 +20,18 @@ module.exports = {
             return message.reply('Invalid arguments.');
         }
 
-        const guild = await Guild.findOne({
+        const guildSettings = await GuildSettings.findOne({
             where: {
-                guild_id: message.guild.id
+                guildId: message.guild.id
             }
         });
-        if (!guild) {
+        if (!guildSettings) {
             return message.reply('This guild has not been initialized yet.');
         }
 
         const existingFeed = await Feed.findOne({
             where: {
-                user_id: message.author.id
+                userId: message.author.id
             }
         });
         if (!existingFeed) {

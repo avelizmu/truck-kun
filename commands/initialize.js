@@ -1,4 +1,4 @@
-const {Guild} = require('../models');
+const {GuildSettings} = require('../models');
 const config = require('../config').discord;
 
 module.exports = {
@@ -20,20 +20,20 @@ module.exports = {
             return message.reply('Invalid channel category ID.');
         }
 
-        const existingGuild = await Guild.findOne({
+        const existingGuildSettings = await GuildSettings.findOne({
             where: {
-                guild_id: message.guild.id
+                guildId: message.guild.id
             }
         });
-        if (existingGuild) {
-            await existingGuild.update({
-                category_channel_id: category.id
+        if (existingGuildSettings) {
+            await existingGuildSettings.update({
+                categoryChannelId: category.id
             });
             return message.reply('Updated feed creation channel.');
         } else {
-            await Guild.create({
-                guild_id: message.guild.id,
-                category_channel_id: category.id
+            await GuildSettings.create({
+                guildId: message.guild.id,
+                categoryChannelId: category.id
             });
             return message.reply('Guild initialized.')
         }
