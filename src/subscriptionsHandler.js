@@ -2,6 +2,7 @@ const {Subscription, Chapter, FeedToSubscriptionMapping} = require('../models');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const {MessageEmbed} = require('discord.js');
+const {JSDOM} = require('jsdom');
 
 let client;
 
@@ -17,6 +18,8 @@ const doCheck = async () => {
 
     for (let subscription of subscriptions) {
         if (subscription.mangadex) {
+            // TODO remove
+            continue;
             try {
                 const {data: content} = await axios.get(subscription.url);
 
@@ -92,8 +95,92 @@ const doCheck = async () => {
             } catch (err) {
                 console.error(err);
             }
+            continue;
         }
 
-        // TODO implement non-mangadex subscription handlers
+        if (subscription.rss) {
+            // TODO implement rss subscription
+            continue;
+        }
+
+        const {data: content} = await axios.get(subscription.url);
+        const {window} = new JSDOM(content, {
+            url: subscription.url
+        });
+        const chaptersDom = window.document.querySelectorAll(subscription.chapterList);
+        const chapters = [...chaptersDom.values()].map(chapter => {
+            const chapterData = {};
+            try {
+                chapterData.chapter = chapter.querySelector(subscription.chapterNumber).innerHTML.replace(/[^\d.]/g, '');
+                chapterData.url = chapter.querySelector(subscription.chapterLink).href;
+            } catch (err) {
+                return {};
+            }
+            return chapterData;
+        }).filter(x => !!x && Object.keys(x).length);
+        const image = window.document.querySelector(subscription.image);
+
+        const newChapters = [];
+        for (let scrapedChapter of chapters) {
+            const [chapter, created] = await Chapter.findOrCreate({
+                where: {
+                    subscriptionId: subscription.id,
+                    identifier: subscription.name,
+                    chapter: scrapedChapter.chapter,
+                },
+                defaults: {
+                    subscriptionId: subscription.id,
+                    identifier: subscription.name,
+                    chapter: scrapedChapter.chapter,
+                    url: scrapedChapter.url
+                }
+            });
+            if (created) {
+                newChapters.push(chapter);
+            }
+        }
+
+        if (newChapters.length) {
+            const embed = new MessageEmbed()
+                .setTitle(subscription.name);
+
+            if (newChapters.length > 1) {
+                embed.setURL(newChapters[newChapters.length - 1].url);
+                embed.addField(`Chapter`, newChapters[newChapters.length - 1].chapter, false);
+                embed.addField('New Chapters', newChapters.length, false);
+                embed.addField('Newest Chapter', newChapters[0].chapter, false);
+            } else {
+                embed.setURL(newChapters[newChapters.length - 1].url);
+                embed.addField(`Chapter`, newChapters[newChapters.length - 1].chapter, false);
+            }
+
+            if (image.tagName === 'A') {
+                const style = image.style;
+                let styleString;
+                if (style['background-image']) {
+                    styleString = style['background-image'];
+                } else if (style['background']) {
+                    styleString = style['background-image'];
+                }
+                let imageUrl = styleString.replace(/^url\("?/, '').replace(/"?\)$/, '');
+                if (imageUrl.startsWith('/')) {
+                    imageUrl = `https://${window.location.host}${imageUrl}`;
+                }
+                embed.setImage(imageUrl);
+            } else if (image.tagName === 'IMG') {
+                embed.setImage(image.src);
+            }
+
+            const mappings = await FeedToSubscriptionMapping.scope('withFeed').findAll({
+                where: {
+                    subscriptionId: subscription.id
+                },
+            });
+
+            for (let mapping of mappings) {
+                const channel = await client.channels.fetch(mapping.feed.channelId);
+                channel.send(embed);
+            }
+        }
     }
 }
