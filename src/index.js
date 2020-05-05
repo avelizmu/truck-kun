@@ -24,7 +24,7 @@ client.on('ready', () => {
 client.on('message', async message => {
     const {content} = message;
     const words = content.split(/[\s]/g);
-    if (words[0].toLowerCase() === config.prefix) {
+    if (words[0].toLowerCase() === config.prefix || new RegExp(`<@!${client.user.id}>`).test(words[0])) {
         if (words.length < 2) {
             return;
         }
