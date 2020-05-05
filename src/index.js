@@ -66,9 +66,9 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
             });
             const connection = await newUserChannel.join();
 
-            const dispatcher = connection.play(ytdl(theme.url, {
-                begin: theme.start
-            }));
+            const dispatcher = connection.play(ytdl(theme.url), {
+                seek: theme.start
+            });
 
             dispatcher.on('start', () => {
                 setTimeout(async () => {
