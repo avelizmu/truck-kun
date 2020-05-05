@@ -65,3 +65,7 @@ message.
     {bot_prefix} setEntrance {youtube_url} {start_time} {duration_time}
 Sets your voice channel entrance. When entering the voice channel specified in the discord config file, if you have an
 entrance set, the bot will join the voice channel with you and play your entrance.
+
+### Set Activity
+    {bot_prefix} setActivity {activity_type} {status}
+Set the bot's activity/presence. The activity_type must be one of playing, watching, streaming, or listening.
