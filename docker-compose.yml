@@ -1,0 +1,9 @@
+version: '2'
+services:
+  node:
+    container_name: truck-kun
+    image: node:latest
+    volumes:
+      - ./:/opt/src
+    command: bash -c 'cd /opt/src && npm install && NODE_ENV=production node src/index'
+    restart: always
