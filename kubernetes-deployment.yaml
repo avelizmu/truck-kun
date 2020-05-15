@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: truck-kun
-          image: aveliz/truck-kun:1.0.1
+          image: aveliz/truck-kun:1.0.3
           ports:
             - containerPort: 80
           env:
