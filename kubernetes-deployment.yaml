@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: truck-kun-deployment
+  labels:
+    app: truck-kun
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: truck-kun
+  template:
+    metadata:
+      labels:
+        app: truck-kun
+    spec:
+      containers:
+        - name: truck-kun
+          image: aveliz/truck-kun:1.0.1
+          ports:
+            - containerPort: 80
+          env:
+            - name: NODE_ENV
+              value: "production"
+          volumeMounts:
+            - name: discord-config
+              mountPath: /app/config/discord.json
+              subPath: discord.json
+            - name: sql-config
+              mountPath: /app/config/sql.json
+              subPath: sql.json
+            - name: youtube-config
+              mountPath: /app/config/youtube.json
+              subPath: youtube.json
+      volumes:
+        - name: discord-config
+          configMap:
+            name: truck-kun-discord-config
+        - name: sql-config
+          configMap:
+            name: truck-kun-sql-config
+        - name: youtube-config
+          configMap:
+            name: truck-kun-youtube-config
