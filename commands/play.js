@@ -13,8 +13,8 @@ module.exports = {
     aliases: [
         'pl'
     ],
-    shortDescription: 'Delete messages',
-    description: 'Delete messages.\n\n' +
+    shortDescription: 'Play a song.',
+    description: 'Play a song.\n\n' +
         `► ${config.prefix} play {youtube url} - Play a youtube video.\n\n` +
         `► ${config.prefix} play {search} - Play the first result of a youtube search.\n\n`,
     execute: async function (client, message, arguments) {
@@ -38,8 +38,6 @@ module.exports = {
         if (!channel) {
             return message.reply('You are not in a voice channel.');
         }
-
-        console.log(url);
 
         const connection = await channel.join();
 
