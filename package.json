@@ -29,6 +29,7 @@
     "sequelize": "^5.21.7",
     "sequelize-cli": "^5.5.1",
     "xml2js": "^0.4.23",
+    "youtube-api": "^2.0.10",
     "ytdl-core": "^2.1.1"
   }
 }
