@@ -4,7 +4,8 @@
   "description": "Discord bot made with node.js to track and notify of new manga updates",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "production": "npx sequelize-cli db:migrate || NODE_ENV=production node src/index"
   },
   "repository": {
     "type": "git",
