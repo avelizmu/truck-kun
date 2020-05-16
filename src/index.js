@@ -3,7 +3,7 @@ const client = new Client();
 const config = require('../config').discord
 const fs = require('fs');
 const subscriptionsHandler = require('./subscriptionsHandler');
-const ytdl = require('ytdl-core');
+const mediaHandler = require('./mediaHandler');
 const {Entrance} = require('../models');
 
 client.on('ready', () => {
@@ -66,16 +66,7 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
             });
             const connection = await newUserChannel.join();
 
-            const dispatcher = connection.play(ytdl(theme.url), {
-                seek: theme.start
-            });
-
-            dispatcher.on('start', () => {
-                setTimeout(async () => {
-                    await dispatcher.pause();
-                    await dispatcher.destroy();
-                }, theme.time)
-            })
+            mediaHandler.playImmediate(connection, {url: theme.url, seek: 0, endTime: theme.time})
         }
     }
 });

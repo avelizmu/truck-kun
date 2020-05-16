@@ -1,5 +1,5 @@
 const config = require('../config');
-const util = require('util');
+const mediaHandler = require('../src/mediaHandler');
 
 module.exports = {
     name: 'stop',
@@ -14,6 +14,11 @@ module.exports = {
             return message.reply('Invalid argument.');
         }
 
-        await (await message.guild.members.fetch(client.user.id)).voice.connection.dispatcher.end();
+        const member = await message.guild.members.fetch(client.user.id);
+        const connection = member.voice.connection;
+        if (!connection) {
+            return message.reply(`Not connected to any channels.`)
+        }
+        mediaHandler.stop(connection);
     }
 }

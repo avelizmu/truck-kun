@@ -1,6 +1,6 @@
 const config = require('../config');
 const util = require('util');
-const ytdl = require('ytdl-core');
+const mediaHandler = require('../src/mediaHandler');
 
 const Youtube = require('youtube-api');
 Youtube.authenticate({
@@ -41,6 +41,6 @@ module.exports = {
 
         const connection = await channel.join();
 
-        const dispatcher = connection.play(ytdl(url));
+        message.reply(mediaHandler.play(connection, {url, seek: 0}));
     }
 }
