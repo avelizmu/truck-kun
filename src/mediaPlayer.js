@@ -11,7 +11,10 @@ module.exports = class MediaPlayer {
     }
 
     play(media) {
-        if (this.dispatcher || this.queue.length) {
+        if (!media) {
+            return;
+        }
+        if (this.dispatcher) {
             this.queue.push(media);
             return `Adding ${media.url} to queue`;
         } else {
@@ -19,9 +22,10 @@ module.exports = class MediaPlayer {
             this.dispatcher = this.connection.play(stream, {
                 seek: media.seek
             });
-            this.currentlyPlaying = media.url;
-            this.dispatcher.on('finish', (reason) => {
-                this.skip();
+            this.currentlyPlaying = media;
+            this.dispatcher.on('finish', () => {
+                this.dispatcher = null;
+                this.play(this.queue.shift());
             });
             this.dispatcher.on('error', err => {
                 console.error(err);
@@ -40,20 +44,21 @@ module.exports = class MediaPlayer {
     }
 
     playImmediate = (media) => {
-        let streamTime = 0;
         if (this.dispatcher) {
-            streamTime = this.dispatcher.totalStreamTime / 1000;
+            this.queue.unshift({
+                url: this.currentlyPlaying.url,
+                seek: this.dispatcher.totalStreamTime / 1000 + parseFloat(this.currentlyPlaying.seek)
+            });
+            this.queue.unshift(media);
             this.dispatcher.end();
             this.dispatcher = null;
+        } else {
+            this.play(media);
         }
-        this.queue.unshift({
-            url: this.currentlyPlaying,
-            seek: streamTime
-        });
-        this.play(media);
     }
 
     stop() {
+        this.queue = [];
         if (this.dispatcher) {
             this.dispatcher.end();
             this.dispatcher = null;
@@ -65,6 +70,5 @@ module.exports = class MediaPlayer {
             this.dispatcher.end();
             this.dispatcher = null;
         }
-        this.play(this.queue.shift());
     }
 }
