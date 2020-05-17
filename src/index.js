@@ -65,7 +65,7 @@ client.on('voiceStateUpdate', async (oldMember, newMember) => {
             });
             const connection = await newUserChannel.join();
 
-            mediaHandler.playImmediate(connection, {url: theme.url, seek: 0, endTime: theme.time})
+            mediaHandler.playImmediate(connection, {url: theme.url, seek: theme.start, endTime: theme.time})
         }
     }
 });
