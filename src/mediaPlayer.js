@@ -25,10 +25,13 @@ module.exports = class MediaPlayer {
             this.currentlyPlaying = media;
             this.dispatcher.on('finish', () => {
                 this.dispatcher = null;
+                this.currentlyPlaying = null;
                 this.play(this.queue.shift());
             });
             this.dispatcher.on('error', err => {
                 console.error(err);
+                this.dispatcher = null;
+                this.currentlyPlaying = null;
                 this.play(this.queue.shift());
             });
             if (media.endTime) {
@@ -51,7 +54,6 @@ module.exports = class MediaPlayer {
             });
             this.queue.unshift(media);
             this.dispatcher.end();
-            this.dispatcher = null;
         } else {
             this.play(media);
         }
@@ -61,14 +63,12 @@ module.exports = class MediaPlayer {
         this.queue = [];
         if (this.dispatcher) {
             this.dispatcher.end();
-            this.dispatcher = null;
         }
     }
 
     skip() {
         if (this.dispatcher) {
             this.dispatcher.end();
-            this.dispatcher = null;
         }
     }
 }
