@@ -46,9 +46,8 @@ client.on('message', async message => {
 // Handle voice channel entrances
 client.on('voiceStateUpdate', async (oldMember, newMember) => {
     const newUserChannel = newMember.channel
-    const oldUserChannel = oldMember.channel
 
-    if (oldUserChannel === null && newUserChannel !== null) {
+    if (newUserChannel !== null) {
         if (newUserChannel.id === config.entranceChannel) {
             const theme = await Entrance.findOne({
                 where: {
