@@ -1,4 +1,4 @@
-const {GuildSettings} = require('../../models');
+const {GuildSettings} = require('../models');
 const config = require('../config').discord;
 
 module.exports = {
