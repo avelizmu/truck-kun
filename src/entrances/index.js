@@ -1,6 +1,6 @@
 const {Client, Collection} = require('discord.js');
 const client = new Client();
-const config = require('../config').discord
+const config = require('./config').discord
 const fs = require('fs');
 const {Entrance} = require('../models');
 const ytdl = require('ytdl-core');
@@ -9,7 +9,7 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
     client.commands = new Collection();
-    const commands = fs.readdirSync('./commands').filter(file => file.endsWith('.js')).map(x => require(`../commands/${x}`));
+    const commands = fs.readdirSync('./commands').filter(file => file.endsWith('.js')).map(x => require(`./commands/${x}`));
     commands.forEach(command => {
         client.commands.set(command.name, command);
         command.aliases.forEach(alias => {
