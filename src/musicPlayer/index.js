@@ -1,6 +1,6 @@
 const {Client, Collection} = require('discord.js');
 const client = new Client();
-const config = require('../config').discord
+const config = require('./config').discord
 const fs = require('fs');
 
 client.on('ready', () => {

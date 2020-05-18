@@ -1,4 +1,4 @@
-const config = require('../../config').discord;
+const config = require('../config').discord;
 const mediaHandler = require('../mediaHandler');
 
 module.exports = {
