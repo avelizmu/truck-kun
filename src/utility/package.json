@@ -1,7 +1,7 @@
 {
   "name": "truck-kun-manga-tracker",
   "version": "0.0.1",
-  "description": "Part of the Truck-Kun bot. Handles the music player.",
+  "description": "Part of the Truck-Kun bot. Handles the utility commands.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/aveliz1999/truck-kun#readme",
   "dependencies": {
-    "discord.js": "^12.2.0",
-    "ytdl-core": "^2.1.2"
+    "discord.js": "^12.2.0"
   }
 }
