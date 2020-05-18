@@ -17,6 +17,7 @@ spec:
       containers:
         - name: truck-kun-utility
           image: aveliz/truck-kun:utility-1.0.0
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 80
           env:
@@ -32,7 +33,7 @@ spec:
       volumes:
         - name: discord-config
           configMap:
-            name: truck-kun-discord-config-utiliyu
+            name: truck-kun-discord-config-utility
         - name: youtube-config
           configMap:
             name: truck-kun-youtube-config

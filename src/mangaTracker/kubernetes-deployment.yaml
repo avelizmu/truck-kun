@@ -1,22 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: truck-kun-mangaTracker-deployment
+  name: truck-kun-manga-tracker-deployment
   labels:
-    app: truck-kun-mangaTracker
+    app: truck-kun-manga-tracker
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: truck-kun-mangaTracker
+      app: truck-kun-manga-tracker
   template:
     metadata:
       labels:
-        app: truck-kun-mangaTracker
+        app: truck-kun-manga-tracker
     spec:
       containers:
-        - name: truck-kun-mangaTracker
+        - name: truck-kun-manga-tracker
           image: aveliz/truck-kun:mangaTracker-1.0.0
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 80
           env:
@@ -32,7 +33,7 @@ spec:
       volumes:
         - name: discord-config
           configMap:
-            name: truck-kun-discord-config-mangaTracker
+            name: truck-kun-discord-config-manga-tracker
         - name: sql-config
           configMap:
             name: truck-kun-sql-config

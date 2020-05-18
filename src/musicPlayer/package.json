@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "production": "NODE_ENV=production npx sequelize-cli db:migrate && NODE_ENV=production node index"
+    "production": "NODE_ENV=production node index"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/aveliz1999/truck-kun#readme",
   "dependencies": {
     "discord.js": "^12.2.0",
+    "youtube-api": "^2.0.10",
     "ytdl-core": "^2.1.2"
   }
 }

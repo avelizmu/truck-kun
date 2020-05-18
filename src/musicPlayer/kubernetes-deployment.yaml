@@ -1,22 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: truck-kun-musicPlayer-deployment
+  name: truck-kun-music-player-deployment
   labels:
-    app: truck-kun-musicPlayer
+    app: truck-kun-music-player
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: truck-kun-musicPlayer
+      app: truck-kun-music-player
   template:
     metadata:
       labels:
-        app: truck-kun-musicPlayer
+        app: truck-kun-music-player
     spec:
       containers:
-        - name: truck-kun-musicPlayer
+        - name: truck-kun-music-player
           image: aveliz/truck-kun:musicPlayer-1.0.0
+          imagePullPolicy: "Always"
           ports:
             - containerPort: 80
           env:
@@ -32,7 +33,7 @@ spec:
       volumes:
         - name: discord-config
           configMap:
-            name: truck-kun-discord-config-musicPlayer
+            name: truck-kun-discord-config-music-player
         - name: youtube-config
           configMap:
             name: truck-kun-youtube-config
