@@ -1,4 +1,4 @@
-const config = require('../config');
+const config = require('../../config');
 const util = require('util');
 const mediaHandler = require('../mediaHandler');
 
@@ -15,8 +15,8 @@ module.exports = {
     ],
     shortDescription: 'Play a song.',
     description: 'Play a song.\n\n' +
-        `► ${config.prefix} play {youtube url} {start second} - Play a youtube video.\n\n` +
-        `► ${config.prefix} play {search} - Play the first result of a youtube search.\n\n`,
+        `► ${config.discord.prefix} play {youtube url} {start second} - Play a youtube video.\n\n` +
+        `► ${config.discord.prefix} play {search} - Play the first result of a youtube search.\n\n`,
     execute: async function (client, message, arguments) {
         if (arguments.length < 1) {
             return message.reply('Invalid argument.');
