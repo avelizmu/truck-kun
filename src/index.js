@@ -1,16 +1,16 @@
 const {Client, Collection} = require('discord.js');
 const client = new Client();
-const config = require('../config').discord
+const config = require('./config').discord
 const fs = require('fs');
 const subscriptionsHandler = require('./subscriptionsHandler');
 const mediaHandler = require('./mediaHandler');
-const {Entrance} = require('../models');
+const {Entrance} = require('./models');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
     client.commands = new Collection();
-    const commands = fs.readdirSync('./commands').filter(file => file.endsWith('.js')).map(x => require(`../commands/${x}`));
+    const commands = fs.readdirSync('./commands').filter(file => file.endsWith('.js')).map(x => require(`./src/commands`));
     commands.forEach(command => {
         client.commands.set(command.name, command);
         command.aliases.forEach(alias => {

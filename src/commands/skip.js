@@ -1,14 +1,14 @@
 const config = require('../config');
-const mediaHandler = require('../src/mediaHandler');
+const mediaHandler = require('../mediaHandler');
 
 module.exports = {
-    name: 'stop',
+    name: 'skip',
     aliases: [
-        'st'
+        'sk'
     ],
-    shortDescription: 'Stop the current song',
-    description: 'Stop the current song.\n\n' +
-        `► ${config.prefix} stop.`,
+    shortDescription: 'Skip the current song',
+    description: 'Skip the current song.\n\n' +
+        `► ${config.prefix} skip.`,
     execute: async function (client, message, arguments) {
         if (arguments.length > 0) {
             return message.reply('Invalid argument.');
@@ -19,6 +19,6 @@ module.exports = {
         if (!connection) {
             return message.reply(`Not connected to any channels.`)
         }
-        mediaHandler.stop(connection);
+        mediaHandler.skip(connection);
     }
 }

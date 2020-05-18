@@ -1,6 +1,6 @@
 const config = require('../config');
 const util = require('util');
-const mediaHandler = require('../src/mediaHandler');
+const mediaHandler = require('../mediaHandler');
 
 const Youtube = require('youtube-api');
 Youtube.authenticate({
