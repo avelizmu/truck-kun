@@ -8,7 +8,7 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 
     client.commands = new Collection();
-    const commands = fs.readdirSync('./commands').filter(file => file.endsWith('.js')).map(x => require(`./src/commands`));
+    const commands = fs.readdirSync('./commands').filter(file => file.endsWith('.js')).map(x => require(`./commands/${x}`));
     commands.forEach(command => {
         client.commands.set(command.name, command);
         command.aliases.forEach(alias => {
