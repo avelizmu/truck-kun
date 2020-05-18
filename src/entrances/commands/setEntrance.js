@@ -1,5 +1,5 @@
-const {Entrance} = require('../models');
-const config = require('../config').discord;
+const {Entrance} = require('../../models');
+const config = require('../../config').discord;
 
 module.exports = {
     name: 'setentrance',
