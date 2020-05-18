@@ -1,17 +1,14 @@
 {
   "development": {
     "token": "",
-    "prefix": "truck-kun",
-    "entranceChannel": ""
+    "prefix": "truck-kun"
   },
   "test": {
     "token": "",
-    "prefix": "truck-kun",
-    "entranceChannel": ""
+    "prefix": "truck-kun"
   },
   "production": {
     "token": "",
-    "prefix": "truck-kun",
-    "entranceChannel": ""
+    "prefix": "truck-kun"
   }
 }

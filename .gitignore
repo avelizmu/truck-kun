@@ -2,6 +2,6 @@
 *.iml
 node_modules
 /src/entrances/config/*.json
-/src/entrances/mangaTracker/*.json
-/src/entrances/musicPlayer/*.json
-/src/entrances/utility/*.json
+/src/mangaTracker/config/*.json
+/src/musicPlayer/config/*.json
+/src/utility/config/*.json
