@@ -1,5 +1,5 @@
 const {GuildSettings, Feed} = require('../../models');
-const config = require('../../config').discord;
+const config = require('../config').discord;
 
 module.exports = {
     name: 'createfeed',

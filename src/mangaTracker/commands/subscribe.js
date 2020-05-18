@@ -1,5 +1,5 @@
 const {GuildSettings, Feed, Subscription, FeedToSubscriptionMapping} = require('../../models');
-const config = require('../../config').discord;
+const config = require('../config').discord;
 const Joi = require('@hapi/joi');
 const axios = require('axios');
 const xml2js = require('xml2js');
