@@ -1,4 +1,4 @@
-const {Subscription, Chapter, FeedToSubscriptionMapping} = require('./models');
+const {Subscription, Chapter, FeedToSubscriptionMapping} = require('../models');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const {MessageEmbed} = require('discord.js');

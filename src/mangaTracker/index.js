@@ -2,8 +2,7 @@ const {Client, Collection} = require('discord.js');
 const client = new Client();
 const config = require('./config').discord
 const fs = require('fs');
-const mediaHandler = require('./mediaHandler');
-const {Entrance} = require('./models');
+const subscriptionsHandler = require('./subscriptionsHandler');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -17,6 +16,7 @@ client.on('ready', () => {
         });
     });
 
+    subscriptionsHandler.init(client);
 });
 
 client.on('message', async message => {
@@ -37,37 +37,6 @@ client.on('message', async message => {
         } catch (err) {
             console.error(err);
             return message.reply('An unexpected error occurred while executing this command.');
-        }
-    }
-});
-
-// Handle voice channel entrances
-client.on('voiceStateUpdate', async (oldMember, newMember) => {
-    const newUserChannel = newMember.channel
-
-    if (newUserChannel !== null) {
-        if (newUserChannel.id === config.entranceChannel) {
-            const theme = await Entrance.findOne({
-                where: {
-                    user: newMember.member.id
-                }
-            });
-            if (!theme) {
-                return;
-            }
-            if (Date.now() - theme.lastUsed < 1800000) {
-                return;
-            }
-            await theme.update({
-                lastUsed: Date.now()
-            });
-            const connection = await newUserChannel.join();
-
-            mediaHandler.playImmediate(connection, {
-                url: theme.url,
-                seek: parseInt(theme.start),
-                endTime: parseInt(theme.time)
-            })
         }
     }
 });
