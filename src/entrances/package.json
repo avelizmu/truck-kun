@@ -1,0 +1,29 @@
+{
+  "name": "truck-kun-entrances",
+  "version": "0.0.1",
+  "description": "Part of the Truck-Kun bot. Handles playing song entrances when a user joins a discord channel.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "production": "NODE_ENV=production npx sequelize-cli db:migrate && NODE_ENV=production node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aveliz1999/truck-kun.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aveliz1999/truck-kun/issues"
+  },
+  "homepage": "https://github.com/aveliz1999/truck-kun#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.7",
+    "sequelize-cli": "^5.5.1",
+    "ytdl-core": "^2.1.1"
+  }
+}

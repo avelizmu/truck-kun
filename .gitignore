@@ -1,4 +1,7 @@
 /.idea
 *.iml
-/node_modules
-*.json
+node_modules
+/src/entrances/config/*.json
+/src/entrances/mangaTracker/*.json
+/src/entrances/musicPlayer/*.json
+/src/entrances/utility/*.json
