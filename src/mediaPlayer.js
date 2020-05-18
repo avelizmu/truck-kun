@@ -16,7 +16,7 @@ module.exports = class MediaPlayer {
         if (!media) {
             return;
         }
-        if (this.currentlyPlaying || Date.now() - this.lastFinished < 200) {
+        if (this.dispatcher) {
             this.queue.push(media);
             console.log(`Adding to queue ${JSON.stringify(media, null, 2)}`)
             return `Adding ${media.url} to queue.`;
@@ -36,34 +36,34 @@ module.exports = class MediaPlayer {
             });
             this.currentlyPlaying = media;
             this.dispatcher.on('finish', () => {
-                this.lastFinished = Date.now();
+                console.log('Finish');
                 this.dispatcher.destroy();
-                this.dispatcher = null;
-                this.currentlyPlaying = null;
                 setTimeout(() => {
+                    this.dispatcher = null;
+                    this.currentlyPlaying = null;
                     this.play(this.queue.shift());
                 }, 200)
             });
             this.dispatcher.on('error', err => {
                 console.log('This is an error');
                 console.error(err);
-                this.lastFinished = Date.now();
                 this.dispatcher.destroy();
-                this.dispatcher = null;
-                this.currentlyPlaying = null;
                 setTimeout(() => {
+                    this.dispatcher = null;
+                    this.currentlyPlaying = null;
                     this.play(this.queue.shift());
                 }, 200)
             });
             if (media.endTime) {
                 this.dispatcher.on('start', () => {
                     this.timeoutHandle = setTimeout(async () => {
-                        if (this.currentlyPlaying.url === media.url) {
+                        if (this.currentlyPlaying && this.currentlyPlaying.url === media.url) {
                             this.skip()
                         }
                     }, media.endTime)
                 })
             }
+            console.log('Done');
 
             return `Playing ${media.url}`;
         }
