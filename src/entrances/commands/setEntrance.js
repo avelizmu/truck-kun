@@ -1,4 +1,4 @@
-const {Entrance} = require('../../models');
+const {Entrance} = require('../models');
 const config = require('../config').discord;
 
 module.exports = {
