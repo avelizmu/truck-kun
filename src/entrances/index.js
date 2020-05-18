@@ -2,7 +2,7 @@ const {Client, Collection} = require('discord.js');
 const client = new Client();
 const config = require('./config').discord
 const fs = require('fs');
-const {Entrance} = require('../models');
+const {Entrance} = require('./models');
 const ytdl = require('ytdl-core');
 
 client.on('ready', () => {
@@ -16,8 +16,6 @@ client.on('ready', () => {
             client.commands.set(alias, command);
         });
     });
-
-    subscriptionsHandler.init(client);
 });
 
 client.on('message', async message => {
