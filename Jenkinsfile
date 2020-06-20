@@ -18,7 +18,7 @@ pipeline {
           }
           post {
             aborted {
-              error
+              error()
             }
           }
         }
