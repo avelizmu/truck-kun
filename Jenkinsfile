@@ -8,13 +8,18 @@ pipeline {
           steps {
             tool 'node'
             nodejs('node') {
+              currentBuild
               timeout(time: 5, unit: 'SECONDS') {
                 sh 'npm install'
                 sh 'node --version'
               }
 
             }
-
+          }
+          post {
+            aborted {
+              error
+            }
           }
         }
 
