@@ -8,11 +8,12 @@ pipeline {
           steps {
             tool 'node'
             nodejs('node') {
-              catchError() {
+              catchError(catchInterruptions: true) {
                 timeout(time: 5, unit: 'SECONDS') {
                   sh 'npm install'
                   sh 'node --version'
                 }
+
               }
 
             }
@@ -31,6 +32,7 @@ pipeline {
     }
 
     stage('last') {
+      agent any
       steps {
         sleep 10
         sh 'ls'
