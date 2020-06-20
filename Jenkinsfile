@@ -8,10 +8,13 @@ pipeline {
           steps {
             tool 'node'
             nodejs('node') {
-              catchError(catchInterruptions: true, buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              try {
                 timeout(time: 5, unit: 'SECONDS') {
                   sh 'npm install'
                   sh 'node --version'
+                }
+                catch (err) {
+                  error(err)
                 }
 
               }
