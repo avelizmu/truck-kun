@@ -6,6 +6,7 @@ pipeline {
       steps {
         sh 'ls'
         tool 'node'
+        nodejs 'node'
         sh 'node --version'
         sh 'npm --version'
       }
