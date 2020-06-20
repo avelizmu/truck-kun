@@ -12,8 +12,7 @@ pipeline {
                 timeout(time: 5, unit: 'SECONDS') {
                   sh 'npm install'
                   sh 'node --version'
-                }
-                catch (err) {
+                } catch (err) {
                   error(err)
                 }
 
