@@ -6,10 +6,12 @@ pipeline {
       steps {
         tool 'node'
         nodejs('node') {
-          sh 'npm test'
+          timeout(time: 5) {
+            sh 'npm test'
+          }
+
         }
 
-        sh 'npm test'
       }
     }
 
