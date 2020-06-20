@@ -1,7 +1,13 @@
 pipeline {
   agent none
   stages {
-    stage('build') {
+    stage('setup') {
+      steps {
+        tool 'docker'
+      }
+    }
+
+    stage('') {
       agent {
         docker {
           image 'node:latest'
@@ -9,10 +15,7 @@ pipeline {
 
       }
       steps {
-        tool 'docker'
-        sh 'ls'
         sh 'node --version'
-        sh 'npm --version'
       }
     }
 
