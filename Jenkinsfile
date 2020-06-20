@@ -8,9 +8,9 @@ pipeline {
           steps {
             tool 'node'
             nodejs('node') {
-              timeout(time: 5) {
-                sh '''npm install
-npm start'''
+              timeout(time: 5, unit: 'HOURS') {
+                sh 'npm install'
+                sh 'node --version'
               }
 
             }
