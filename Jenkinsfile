@@ -5,7 +5,10 @@ pipeline {
       agent any
       steps {
         tool 'node'
-        nodejs 'node'
+        nodejs('node') {
+          sh 'npm test'
+        }
+
         sh 'npm test'
       }
     }
