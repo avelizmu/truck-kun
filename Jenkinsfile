@@ -9,7 +9,8 @@ pipeline {
             tool 'node'
             nodejs('node') {
               timeout(time: 5) {
-                sh 'npm test'
+                sh '''npm install
+npm start'''
               }
 
             }
@@ -24,6 +25,13 @@ pipeline {
           }
         }
 
+      }
+    }
+
+    stage('last') {
+      steps {
+        sleep 10
+        sh 'ls'
       }
     }
 
