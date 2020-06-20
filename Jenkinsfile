@@ -7,8 +7,8 @@ pipeline {
         git(url: 'https://github.com/aveliz1999/truck-kun.git', branch: 'jenkins')
         sh 'ls'
         sh 'npm'
-        sh '''node --version
-npm --version'''
+        sh 'node --version'
+        sh 'npm --version'
       }
     }
 
