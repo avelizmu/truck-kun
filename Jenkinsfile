@@ -5,6 +5,12 @@ pipeline {
       parallel {
         stage('Test') {
           agent any
+          post {
+            aborted {
+              sh 'echo'
+            }
+
+          }
           steps {
             tool 'node'
             nodejs('node') {
@@ -14,11 +20,8 @@ pipeline {
               }
 
             }
-          }
-          post {
-            aborted {
-              sh 'echo'
-            }
+
+            error 'Test'
           }
         }
 
