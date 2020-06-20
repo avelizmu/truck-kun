@@ -1,21 +1,15 @@
 pipeline {
   agent none
   stages {
-    stage('setup') {
+    stage('1') {
       steps {
-        tool 'docker'
+        node(label: 'test node')
       }
     }
 
-    stage('') {
-      agent {
-        docker {
-          image 'node:latest'
-        }
-
-      }
+    stage('2') {
       steps {
-        sh 'node --version'
+        echo 'asd'
       }
     }
 
