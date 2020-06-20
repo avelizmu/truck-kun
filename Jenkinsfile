@@ -2,7 +2,12 @@ pipeline {
   agent none
   stages {
     stage('build') {
-      agent any
+      agent {
+        docker {
+          image 'node:latest'
+        }
+
+      }
       steps {
         tool 'docker'
         sh 'ls'
