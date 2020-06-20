@@ -17,7 +17,7 @@ pipeline {
           }
           post {
             aborted {
-              error 'Test'
+              error 'FAILURE'
             }
           }
         }
