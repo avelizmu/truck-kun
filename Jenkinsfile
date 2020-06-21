@@ -15,7 +15,7 @@ pipeline {
             tool 'node'
             nodejs('node') {
               sh 'npm install'
-              sh 'node --version '
+              sh 'node --version'
             }
 
           }
