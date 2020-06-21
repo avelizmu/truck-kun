@@ -5,20 +5,19 @@ pipeline {
       parallel {
         stage('Test') {
           agent any
-          steps {
-            tool 'node'
-            nodejs('node') {
-              timeout(time: 5, unit: 'SECONDS') {
-                sh 'npm install'
-                sh 'node --version '
-              }
-
-            }
-          }
           post {
             aborted {
               error 'FAILURE'
             }
+
+          }
+          steps {
+            tool 'node'
+            nodejs('node') {
+              sh 'npm install'
+              sh 'node --version '
+            }
+
           }
         }
 
