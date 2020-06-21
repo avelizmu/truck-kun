@@ -10,7 +10,7 @@ pipeline {
             nodejs('node') {
               timeout(time: 5, unit: 'SECONDS') {
                 sh 'npm install'
-                sh 'node --version'
+                sh 'node --version '
               }
 
             }
