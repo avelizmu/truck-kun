@@ -21,7 +21,7 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.2",
     "@hapi/joi": "^17.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cron": "^1.8.2",
     "discord.js": "^12.2.0",
     "jsdom": "^16.2.2",
